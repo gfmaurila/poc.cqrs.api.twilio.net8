@@ -26,8 +26,7 @@
 ## poc.cqrs.api.twilio.net
 - Simula a funcionalidade de serviços de email e mensagens, como SendGridEmail e Twilio.
 - docker-compose up --build
-- http://localhost:5075/swagger/index.html
-- SQL Server
+- http://localhost:5078/swagger/index.html
 
 ## Youtube
 - ......
