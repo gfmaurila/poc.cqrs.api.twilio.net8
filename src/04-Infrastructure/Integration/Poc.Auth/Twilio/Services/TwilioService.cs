@@ -1,64 +1,50 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Poc.Auth.AuthNotification.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using poc.core.api.net8.Interface;
 using Poc.Auth.Twilio.Interfaces;
-using Poc.Auth.Twilio.Request;
-using Poc.Auth.TwilioWhatsApp;
-using Polly;
-using System.Net;
-using System.Net.Http.Json;
+using Poc.Auth.Twilio.Mapper;
+using Poc.Auth.Twilio.Response;
+using Poc.Contract.Command.TryWhatsApp.Request;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace Poc.Auth.Twilio.Services;
 
 public class TwilioService : ITwilioService
 {
-    private readonly HttpClient _httpClient;
     private readonly ILogger<TwilioService> _logger;
-    private readonly IConfiguration _configuration;
-    private readonly AsyncPolicy<HttpResponseMessage> _retryPolicy;
-    private readonly IAuthNotificationApiService _apiService;
+    private readonly IRedisCacheService<TwilioMessageResponse> _redis;
 
-    public TwilioService(HttpClient httpClient, ILogger<TwilioService> logger, IConfiguration configuration, IAuthNotificationApiService apiService)
+    public TwilioService(ILogger<TwilioService> logger,
+                         IRedisCacheService<TwilioMessageResponse> redis)
     {
-        _httpClient = httpClient;
         _logger = logger;
-        _configuration = configuration;
-        _apiService = apiService;
-
-        // Configuração da política de tentativas de retry
-        _retryPolicy = Policy
-            .Handle<HttpRequestException>()
-            .OrResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
-            .WaitAndRetryAsync(
-                retryCount: _configuration.GetValue<int>(TwilioAppAuthConsts.RETRYCOUNT),
-                sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                onRetry: (ex, retryCount, context) =>
-                {
-                    // Lógica a ser executada a cada tentativa de retry
-                    _logger.LogWarning($"Tentativa {retryCount} de envio de celular...");
-                }
-            );
+        _redis = redis;
     }
 
-    public async Task TwilioAsync(TwilioRequest request)
+    public async Task<TwilioMessageResponse> CalendarAlertAsync(CreateCalendarAlertCommand request)
     {
-        var token = await _apiService.GetTokenTwilioAsync();
-        if (token is not null)
-            await _retryPolicy.ExecuteAsync(async () =>
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token.ToString());
-                var response = await _httpClient.PostAsJsonAsync(
-                    _configuration.GetValue<string>(TwilioAppAuthConsts.URL_CREATE),
-                    request
-                );
-                response.EnsureSuccessStatusCode();
+        TwilioClient.Init(request.Auth.AccountSid, request.Auth.AuthToken);
 
-                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    _logger.LogError($"Falha ao enviar sms ou whatsapp: {error}");
-                }
-                return response;
-            });
+        var message = await MessageResource.CreateAsync(
+            body: request.Body,
+            from: new PhoneNumber(request.Auth.From),
+            to: new PhoneNumber(request.To)
+        );
+
+        var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message);
+
+        if (message.SubresourceUris != null)
+        {
+            response.SubresourceUris = new SubresourceUrisResponse
+            {
+                Media = message.SubresourceUris.ToString()
+            };
+        }
+
+        const string cacheKey = nameof(TwilioMessageResponse);
+        await _redis.SetAsync("CalendarAlertAsync_" + cacheKey, response);
+
+        return response;
     }
 }

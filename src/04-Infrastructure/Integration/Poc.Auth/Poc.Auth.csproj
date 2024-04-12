@@ -12,6 +12,11 @@
     <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
     <PackageReference Include="Refit.Newtonsoft.Json" Version="7.0.0" />
 	  <PackageReference Include="poc.core.api.net8" Version="1.0.0" />
+	  <PackageReference Include="Twilio" Version="7.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\02-Application\Poc.Contract\Poc.Contract.csproj" />
   </ItemGroup>
 
 </Project>

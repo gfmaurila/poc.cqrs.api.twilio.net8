@@ -1,14 +1,11 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using poc.core.api.net8;
-using poc.core.api.net8.Extensions;
 using Poc.Auth;
 using Poc.Command;
 using Poc.Contract.MappingProfile;
 using Poc.DistributedCache;
 using Poc.Query;
-using Poc.RabbiMQ;
 using Poc.Twilio.API.Extensions;
 using Serilog;
 
@@ -20,12 +17,9 @@ builder.Services.AddMediatR(typeof(Program).Assembly);
 
 CommandInitializer.Initialize(builder.Services);
 QueryInitializer.Initialize(builder.Services);
-RabbiMQInitializer.Initialize(builder.Services);
 CoreInitializer.Initialize(builder.Services);
 IntegrationApisInitializer.Initialize(builder.Services);
 DistributedCacheInitializer.Initialize(builder.Services, builder.Configuration);
-
-builder.Services.AddHealthChecks(builder.Configuration);
 
 var autoMapperConfig = new MapperConfiguration(cfg =>
 {
@@ -39,7 +33,6 @@ builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerDocumentation();
-builder.Services.UseAuthentication(builder.Configuration);
 
 builder.Services.AddAuthorization();
 
@@ -56,11 +49,6 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker") |
     app.UseSwaggerUI();
 }
 
-app.UseHealthChecks("/health", new HealthCheckOptions
-{
-    AllowCachingResponses = false,
-    ResponseWriter = (httpContext, healthReport) => httpContext.Response.WriteAsync(healthReport.ToJson())
-});
 
 app.UseHttpsRedirection();
 
@@ -68,6 +56,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.Logger.LogInformation("----- Iniciando a aplicação - Core...");
+app.Logger.LogInformation("----- Iniciando a aplicação - Poc.Twilio.API...");
 
 app.Run();

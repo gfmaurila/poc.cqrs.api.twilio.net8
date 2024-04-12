@@ -1,11 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Poc.DistributedCache.Configuration;
-using Poc.Twilio.API.Models;
+﻿using Microsoft.OpenApi.Models;
 using System.Reflection;
-using System.Text;
 
 namespace Poc.Twilio.API.Extensions;
 
@@ -36,61 +30,12 @@ public static class WebApplicationExtensions
                 return false;
             });
 
-
-            // Primeira definição de segurança
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Description = "JWT Authorization header usando o esquema Bearer."
-            });
-
-            // Requisito de segurança para "Bearer"
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    new string[] {}
-                }
-            });
-
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
         });
 
 
-    }
-
-    public static void UseAuthentication(this IServiceCollection services, IConfiguration configuration)
-    {
-        services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-
-                    ValidIssuer = configuration.GetValue<string>(ConfigConsts.Issuer),
-                    ValidAudience = configuration.GetValue<string>(ConfigConsts.Audience),
-                    IssuerSigningKey = new SymmetricSecurityKey
-                    (Encoding.UTF8.GetBytes(configuration.GetValue<string>(ConfigConsts.Key)))
-                };
-            });
     }
 
     public static void UseDevelopmentSwagger(this IApplicationBuilder app)
@@ -100,24 +45,5 @@ public static class WebApplicationExtensions
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Poc.Twilio.API");
         });
-    }
-
-    public static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
-    {
-        var mongoSettings = configuration.GetSection("MongoDB").Get<MongoDbSettings>();
-        var connectionString = configuration.GetConnectionString("CacheConnection");
-
-        var healthCheckBuilder = services
-            .AddHealthChecks()
-            .AddMongoDb(mongoSettings.ConnectionString, tags: HealthCheckTags.DatabaseTags)
-            .AddRedis(connectionString, tags: HealthCheckTags.CacheTags);
-
-        var rabbitMqConfig = configuration.GetSection("RabbitMQ");
-        var rabbitMqConnectionString = $"amqp://{rabbitMqConfig["Username"]}:{rabbitMqConfig["Password"]}@{rabbitMqConfig["Hostname"]}:{rabbitMqConfig["Port"]}/{rabbitMqConfig["VirtualHost"]}";
-
-        healthCheckBuilder.AddRabbitMQ(
-            rabbitConnectionString: rabbitMqConnectionString,
-            tags: HealthCheckTags.RabbitMqTags
-        );
     }
 }

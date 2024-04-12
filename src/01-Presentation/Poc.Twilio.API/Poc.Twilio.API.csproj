@@ -12,9 +12,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Ardalis.Result" Version="7.0.0" />
-		<PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="6.0.2" />
-		<PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="8.0.0" />
-		<PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="MediatR" Version="11.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
@@ -37,7 +34,6 @@
 		<ProjectReference Include="..\..\02-Application\Poc.Contract\Poc.Contract.csproj" />
 		<ProjectReference Include="..\..\04-Infrastructure\DistributedCache\Poc.DistributedCache\Poc.DistributedCache.csproj" />
 		<ProjectReference Include="..\..\04-Infrastructure\Integration\Poc.Auth\Poc.Auth.csproj" />
-		<ProjectReference Include="..\..\04-Infrastructure\Integration\Poc.RabbiMQ\Poc.RabbiMQ.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

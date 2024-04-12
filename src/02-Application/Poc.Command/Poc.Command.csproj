@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\03-Domain\Poc.Domain\Poc.Domain.csproj" />
+    <ProjectReference Include="..\..\04-Infrastructure\Integration\Poc.Auth\Poc.Auth.csproj" />
     <ProjectReference Include="..\Poc.Query\Poc.Query.csproj" />
   </ItemGroup>
 

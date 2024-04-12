@@ -1,8 +1,9 @@
-﻿using Poc.Auth.Twilio.Request;
+﻿using Poc.Auth.Twilio.Response;
+using Poc.Contract.Command.TryWhatsApp.Request;
 
 namespace Poc.Auth.Twilio.Interfaces;
 
 public interface ITwilioService
 {
-    Task TwilioAsync(TwilioRequest dto);
+    Task<TwilioMessageResponse> CalendarAlertAsync(CreateCalendarAlertCommand dto);
 }
