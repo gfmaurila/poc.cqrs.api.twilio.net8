@@ -17,16 +17,14 @@
 - Repository Pattern
 - Resut Pattern
 - Domain Events
-- ![image](https://github.com/gfmaurila/poc.cqrs.api.core.sqlserver.ef.net8/assets/5544035/d468e5d6-0d4d-40ba-a074-38204bc6a9b3)
-- ![image](https://github.com/gfmaurila/poc.cqrs.api.core.sqlserver.ef.net8/assets/5544035/e3f22b99-ae7c-4361-b6f4-bab7d0951aaa)
-- ![image](https://github.com/gfmaurila/poc.cqrs.api.core.sqlserver.ef.net8/assets/5544035/14fc2aff-7594-4f6d-9d8d-6cd3af2d2011)
+- ![image](https://github.com/gfmaurila/poc.cqrs.api.mock.net8/assets/5544035/5d4b23a7-eff4-4c38-87a3-9d88f1aa47e5)
 
 
 
 
 
-## poc.cqrs.api.core.sqlserver.ef.net8
-- API de autenticação para outros serviços. Gerencia tokens e controla o acesso com base nos papéis dos usuários.
+## poc.cqrs.api.twilio.net
+- Simula a funcionalidade de serviços de email e mensagens, como SendGridEmail e Twilio.
 - docker-compose up --build
 - http://localhost:5075/swagger/index.html
 - SQL Server
