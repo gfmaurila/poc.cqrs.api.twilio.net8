@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DistributedCache", "Distrib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Poc.DistributedCache", "src\04-Infrastructure\DistributedCache\Poc.DistributedCache\Poc.DistributedCache.csproj", "{6C5E7E05-FCB4-473D-87C1-72154E4FD8FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Poc.Twilio.API", "src\01-Presentation\Poc.Core.API\Poc.Twilio.API.csproj", "{F697A4BF-79C8-4823-A4E2-FEF1C454B2EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Poc.Twilio.API", "src\01-Presentation\Poc.Twilio.API\Poc.Twilio.API.csproj", "{E5B293B3-9A43-47C3-AEFA-A56D84C34A58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,10 +71,10 @@ Global
 		{6C5E7E05-FCB4-473D-87C1-72154E4FD8FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C5E7E05-FCB4-473D-87C1-72154E4FD8FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C5E7E05-FCB4-473D-87C1-72154E4FD8FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F697A4BF-79C8-4823-A4E2-FEF1C454B2EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F697A4BF-79C8-4823-A4E2-FEF1C454B2EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F697A4BF-79C8-4823-A4E2-FEF1C454B2EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F697A4BF-79C8-4823-A4E2-FEF1C454B2EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5B293B3-9A43-47C3-AEFA-A56D84C34A58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5B293B3-9A43-47C3-AEFA-A56D84C34A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5B293B3-9A43-47C3-AEFA-A56D84C34A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5B293B3-9A43-47C3-AEFA-A56D84C34A58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,7 +89,7 @@ Global
 		{AB5D324A-FA08-41EC-BBF0-54BF64BD77F1} = {038D4F91-238E-4F2D-8F4F-BAF479BFACF0}
 		{DB3051C6-D36E-4B84-92F1-FC6F29F6F174} = {693AAFEB-EB85-454C-8618-08AB663170A4}
 		{6C5E7E05-FCB4-473D-87C1-72154E4FD8FF} = {DB3051C6-D36E-4B84-92F1-FC6F29F6F174}
-		{F697A4BF-79C8-4823-A4E2-FEF1C454B2EB} = {09B48E4B-5AB7-4C25-806E-A2D992898F7E}
+		{E5B293B3-9A43-47C3-AEFA-A56D84C34A58} = {09B48E4B-5AB7-4C25-806E-A2D992898F7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC56B6C8-9186-4389-9FDC-0340B40BC5C8}
