@@ -25,6 +25,7 @@
 
 ## poc.cqrs.api.twilio.net
 - Simula a funcionalidade de serviços de email e mensagens, como SendGridEmail e Twilio.
+- Documentação: https://www.twilio.com/docs/whatsapp/api
 - docker-compose up --build
 - http://localhost:5078/swagger/index.html
 
