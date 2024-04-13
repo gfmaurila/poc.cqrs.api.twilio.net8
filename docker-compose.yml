@@ -16,9 +16,9 @@ services:
       context: .
       dockerfile: src/01-Presentation/Poc.Twilio.API/Dockerfile
     expose:
-      - 5078
+      - 5079
     ports:
-      - 5078:5078
+      - 5079:5079
     links:
       - redis
       - mongoserver
