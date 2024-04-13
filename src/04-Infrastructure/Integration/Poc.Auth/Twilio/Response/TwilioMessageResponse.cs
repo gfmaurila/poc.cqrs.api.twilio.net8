@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Poc.Contract.Command.TryWhatsApp.Request;
 
 namespace Poc.Auth.Twilio.Response;
 
@@ -63,6 +64,9 @@ public class TwilioMessageResponse
 
     [JsonProperty("uri")]
     public string Uri { get; set; }
+
+    public CreateCalendarAlertCommand RequestCreateCalendarAlert { get; set; }
+    public CreateCodeCommand RequestCreateCode { get; set; }
 
 }
 

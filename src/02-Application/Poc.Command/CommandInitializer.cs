@@ -10,6 +10,7 @@ public class CommandInitializer
 {
     public static void Initialize(IServiceCollection services)
     {
-        services.AddTransient<IRequestHandler<CreateCalendarAlertCommand, Result>, CreateCreateCalendarAlertHandler>();
+        services.AddTransient<IRequestHandler<CreateCalendarAlertCommand, Result>, CreateCalendarAlertHandler>();
+        services.AddTransient<IRequestHandler<CreateCodeCommand, Result>, CreateCodeHandler>();
     }
 }

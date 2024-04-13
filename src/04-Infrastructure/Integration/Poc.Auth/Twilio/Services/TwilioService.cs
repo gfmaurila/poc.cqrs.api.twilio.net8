@@ -24,27 +24,71 @@ public class TwilioService : ITwilioService
 
     public async Task<TwilioMessageResponse> CalendarAlertAsync(CreateCalendarAlertCommand request)
     {
-        TwilioClient.Init(request.Auth.AccountSid, request.Auth.AuthToken);
-
-        var message = await MessageResource.CreateAsync(
-            body: request.Body,
-            from: new PhoneNumber(request.Auth.From),
-            to: new PhoneNumber(request.To)
-        );
-
-        var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message);
-
-        if (message.SubresourceUris != null)
+        string cacheKey = nameof(TwilioMessageResponse) + "_AGENDA_" + Guid.NewGuid().ToString();
+        try
         {
-            response.SubresourceUris = new SubresourceUrisResponse
+            TwilioClient.Init(request.Auth.AccountSid, request.Auth.AuthToken);
+
+            var message = await MessageResource.CreateAsync(
+                body: request.Body,
+                from: new PhoneNumber(request.Auth.From),
+                to: new PhoneNumber(request.To)
+            );
+
+            var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message, request);
+
+            if (message.SubresourceUris != null)
             {
-                Media = message.SubresourceUris.ToString()
-            };
+                response.SubresourceUris = new SubresourceUrisResponse
+                {
+                    Media = message.SubresourceUris.ToString()
+                };
+            }
+
+            await _redis.SetAsync(cacheKey, response);
+
+            return response;
         }
+        catch (Exception ex)
+        {
+            var response = TwilioMapper.MapCreateCalendarAlertCommandToMessageResponse(ex, request);
+            await _redis.SetAsync(cacheKey, response);
+            return response;
+        }
+    }
 
-        const string cacheKey = nameof(TwilioMessageResponse);
-        await _redis.SetAsync("CalendarAlertAsync_" + cacheKey, response);
+    public async Task<TwilioMessageResponse> CodeAsync(CreateCodeCommand request)
+    {
+        string cacheKey = nameof(TwilioMessageResponse) + "_CODE_" + Guid.NewGuid().ToString();
+        try
+        {
+            TwilioClient.Init(request.Auth.AccountSid, request.Auth.AuthToken);
 
-        return response;
+            var message = await MessageResource.CreateAsync(
+                body: request.Body,
+                from: new PhoneNumber(request.Auth.From),
+                to: new PhoneNumber(request.To)
+            );
+
+            var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message, request);
+
+            if (message.SubresourceUris != null)
+            {
+                response.SubresourceUris = new SubresourceUrisResponse
+                {
+                    Media = message.SubresourceUris.ToString()
+                };
+            }
+
+            await _redis.SetAsync(cacheKey, response);
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            var response = TwilioMapper.MapCreateCalendarAlertCommandToMessageResponse(ex, request);
+            await _redis.SetAsync(cacheKey, response);
+            return response;
+        }
     }
 }

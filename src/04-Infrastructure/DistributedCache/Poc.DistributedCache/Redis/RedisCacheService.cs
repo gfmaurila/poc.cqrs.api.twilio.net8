@@ -13,6 +13,32 @@ public class RedisCacheService<T> : IRedisCacheService<T>
         _database = redisConnection.GetDatabase();
     }
 
+    public async Task<IEnumerable<string>> GetKeysWithPrefixAsync(string prefix)
+    {
+        var server = _database.Multiplexer.GetServer(_database.Multiplexer.GetEndPoints().First());
+        var keys = server.Keys(pattern: prefix + "*", pageSize: 10);
+        return keys.Select(key => (string)key);
+    }
+
+
+    public async Task<IEnumerable<T>> GetMessagesStartingWithAsync(string prefix)
+    {
+        var keys = await GetKeysWithPrefixAsync(prefix);
+        var messages = new List<T>();
+
+        foreach (var key in keys)
+        {
+            var message = await GetAsync(key);
+            if (message != null)
+            {
+                messages.Add(message);
+            }
+        }
+
+        return messages;
+    }
+
+
     public async Task<bool> SetAsync(string key, T value, TimeSpan? expiry = null)
     {
         var serializedValue = JsonSerializer.Serialize(value);

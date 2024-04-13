@@ -18,7 +18,6 @@ COPY src/02-Application/Poc.Command/Poc.Command.csproj .
 COPY src/02-Application/Poc.Query/Poc.Query.csproj .
 COPY src/02-Application/Poc.Contract/Poc.Contract.csproj .
 COPY src/04-Infrastructure/DistributedCache/Poc.DistributedCache/Poc.DistributedCache.csproj .
-COPY src/04-Infrastructure/Integration/Poc.RabbiMQ/Poc.RabbiMQ.csproj .
 COPY src/04-Infrastructure/Integration/Poc.Auth/Poc.Auth.csproj .
 
 # Restaura as dependências do projeto

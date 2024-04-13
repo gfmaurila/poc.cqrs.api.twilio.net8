@@ -6,4 +6,5 @@ namespace Poc.Auth.Twilio.Interfaces;
 public interface ITwilioService
 {
     Task<TwilioMessageResponse> CalendarAlertAsync(CreateCalendarAlertCommand dto);
+    Task<TwilioMessageResponse> CodeAsync(CreateCodeCommand dto);
 }
