@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using poc.core.api.net8.Enumerado;
 using poc.core.api.net8.Interface;
 using Poc.Auth.Twilio.Interfaces;
 using Poc.Auth.Twilio.Mapper;
@@ -24,29 +25,25 @@ public class TwilioService : ITwilioService
 
     public async Task<TwilioMessageResponse> CalendarAlertAsync(CreateCalendarAlertCommand request)
     {
-        string cacheKey = nameof(TwilioMessageResponse) + "_AGENDA_" + Guid.NewGuid().ToString();
+        string cacheKey = nameof(TwilioMessageResponse);
+
         try
         {
             TwilioClient.Init(request.Auth.AccountSid, request.Auth.AuthToken);
+            var response = new TwilioMessageResponse();
 
-            var message = await MessageResource.CreateAsync(
-                body: request.Body,
-                from: new PhoneNumber(request.Auth.From),
-                to: new PhoneNumber(request.To)
-            );
-
-            var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message, request);
-
-            if (message.SubresourceUris != null)
+            if (request.Notification == ENotificationType.WhatsApp)
             {
-                response.SubresourceUris = new SubresourceUrisResponse
-                {
-                    Media = message.SubresourceUris.ToString()
-                };
+                cacheKey = nameof(TwilioMessageResponse) + "_WHATSAPP_AGENDA_" + Guid.NewGuid().ToString();
+                response = await CreateWhatsAppAgenda(request);
             }
 
+            if (request.Notification == ENotificationType.SMS)
+            {
+                cacheKey = nameof(TwilioMessageResponse) + "_SMS_AGENDA_" + Guid.NewGuid().ToString();
+                response = await CreateSMS(request);
+            }
             await _redis.SetAsync(cacheKey, response);
-
             return response;
         }
         catch (Exception ex)
@@ -59,25 +56,24 @@ public class TwilioService : ITwilioService
 
     public async Task<TwilioMessageResponse> CodeAsync(CreateCodeCommand request)
     {
-        string cacheKey = nameof(TwilioMessageResponse) + "_CODE_" + Guid.NewGuid().ToString();
+        string cacheKey = nameof(TwilioMessageResponse);
+
         try
         {
             TwilioClient.Init(request.Auth.AccountSid, request.Auth.AuthToken);
 
-            var message = await MessageResource.CreateAsync(
-                body: request.Body,
-                from: new PhoneNumber(request.Auth.From),
-                to: new PhoneNumber(request.To)
-            );
+            var response = new TwilioMessageResponse();
 
-            var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message, request);
-
-            if (message.SubresourceUris != null)
+            if (request.Notification == ENotificationType.WhatsApp)
             {
-                response.SubresourceUris = new SubresourceUrisResponse
-                {
-                    Media = message.SubresourceUris.ToString()
-                };
+                cacheKey = nameof(TwilioMessageResponse) + "_WHATSAPP_CODE_" + Guid.NewGuid().ToString();
+                response = await CreateWhatsAppCode(request);
+            }
+
+            if (request.Notification == ENotificationType.SMS)
+            {
+                cacheKey = nameof(TwilioMessageResponse) + "_SMS_CODE_" + Guid.NewGuid().ToString();
+                response = await CreateSMS(request);
             }
 
             await _redis.SetAsync(cacheKey, response);
@@ -91,4 +87,85 @@ public class TwilioService : ITwilioService
             return response;
         }
     }
+
+
+    #region Private
+    private async Task<TwilioMessageResponse> CreateSMS(CreateCalendarAlertCommand request)
+    {
+        var messageOptions = new CreateMessageOptions(new PhoneNumber(request.To));
+        messageOptions.From = new PhoneNumber(request.Auth.From);
+        messageOptions.Body = request.Body;
+        var message = MessageResource.Create(messageOptions);
+
+        var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message, request);
+
+        if (message.SubresourceUris != null)
+        {
+            response.SubresourceUris = new SubresourceUrisResponse
+            {
+                Media = message.SubresourceUris.ToString()
+            };
+        }
+        return response;
+    }
+
+    private async Task<TwilioMessageResponse> CreateSMS(CreateCodeCommand request)
+    {
+        var messageOptions = new CreateMessageOptions(new PhoneNumber(request.To));
+        messageOptions.From = new PhoneNumber(request.Auth.From);
+        messageOptions.Body = request.Body;
+        var message = MessageResource.Create(messageOptions);
+
+        var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message, request);
+
+        if (message.SubresourceUris != null)
+        {
+            response.SubresourceUris = new SubresourceUrisResponse
+            {
+                Media = message.SubresourceUris.ToString()
+            };
+        }
+        return response;
+    }
+
+    private async Task<TwilioMessageResponse> CreateWhatsAppAgenda(CreateCalendarAlertCommand request)
+    {
+        var message = await MessageResource.CreateAsync(
+                body: request.Body,
+                from: new PhoneNumber(request.Auth.From),
+                to: new PhoneNumber(request.To)
+            );
+
+        var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message, request);
+
+        if (message.SubresourceUris != null)
+        {
+            response.SubresourceUris = new SubresourceUrisResponse
+            {
+                Media = message.SubresourceUris.ToString()
+            };
+        }
+        return response;
+    }
+
+    private async Task<TwilioMessageResponse> CreateWhatsAppCode(CreateCodeCommand request)
+    {
+        var message = await MessageResource.CreateAsync(
+                body: request.Body,
+                from: new PhoneNumber(request.Auth.From),
+                to: new PhoneNumber(request.To)
+            );
+
+        var response = TwilioMapper.MapTwilioMessageResponseToMessageResponse(message, request);
+
+        if (message.SubresourceUris != null)
+        {
+            response.SubresourceUris = new SubresourceUrisResponse
+            {
+                Media = message.SubresourceUris.ToString()
+            };
+        }
+        return response;
+    }
+    #endregion
 }
