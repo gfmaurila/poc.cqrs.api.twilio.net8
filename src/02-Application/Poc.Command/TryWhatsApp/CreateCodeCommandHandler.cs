@@ -6,11 +6,11 @@ using Poc.Contract.Command.TryWhatsApp.Request;
 
 namespace Poc.Command.TryWhatsApp;
 
-public class CreateCodeHandler : IRequestHandler<CreateCodeCommand, Result>
+public class CreateCodeCommandHandler : IRequestHandler<CreateCodeCommand, Result>
 {
-    private readonly ILogger<CreateCodeHandler> _logger;
+    private readonly ILogger<CreateCodeCommandHandler> _logger;
     private readonly ITwilioService _twilioService;
-    public CreateCodeHandler(ILogger<CreateCodeHandler> logger,
+    public CreateCodeCommandHandler(ILogger<CreateCodeCommandHandler> logger,
                              ITwilioService twilioService)
     {
         _logger = logger;

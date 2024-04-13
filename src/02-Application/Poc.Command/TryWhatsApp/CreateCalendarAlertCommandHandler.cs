@@ -6,11 +6,11 @@ using Poc.Contract.Command.TryWhatsApp.Request;
 
 namespace Poc.Command.TryWhatsApp;
 
-public class CreateCalendarAlertHandler : IRequestHandler<CreateCalendarAlertCommand, Result>
+public class CreateCalendarAlertCommandHandler : IRequestHandler<CreateCalendarAlertCommand, Result>
 {
-    private readonly ILogger<CreateCalendarAlertHandler> _logger;
+    private readonly ILogger<CreateCalendarAlertCommandHandler> _logger;
     private readonly ITwilioService _twilioService;
-    public CreateCalendarAlertHandler(ILogger<CreateCalendarAlertHandler> logger,
+    public CreateCalendarAlertCommandHandler(ILogger<CreateCalendarAlertCommandHandler> logger,
                                       ITwilioService twilioService)
     {
         _logger = logger;
