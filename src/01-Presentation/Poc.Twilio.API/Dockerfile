@@ -10,28 +10,28 @@ RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src/01-Presentation
+WORKDIR /src/poc.cqrs.api.twilio.net8/src/01-Presentation
 
-# Copia o arquivo .csproj para o diretório de trabalho atual no contêiner
-COPY src/01-Presentation/Poc.Twilio.API/Poc.Twilio.API.csproj .
-COPY src/02-Application/Poc.Command/Poc.Command.csproj .
-COPY src/02-Application/Poc.Query/Poc.Query.csproj .
-COPY src/02-Application/Poc.Contract/Poc.Contract.csproj .
-COPY src/04-Infrastructure/DistributedCache/Poc.DistributedCache/Poc.DistributedCache.csproj .
-COPY src/04-Infrastructure/Integration/Poc.Auth/Poc.Auth.csproj .
+# Copia o arquivo .csproj para o diretÃ³rio de trabalho atual no contÃªiner
+COPY src/poc.cqrs.api.twilio.net8/src/01-Presentation/Poc.Twilio.API/Poc.Twilio.API.csproj .
+COPY src/poc.cqrs.api.twilio.net8/src/02-Application/Poc.Command/Poc.Command.csproj .
+COPY src/poc.cqrs.api.twilio.net8/src/02-Application/Poc.Query/Poc.Query.csproj .
+COPY src/poc.cqrs.api.twilio.net8/src/02-Application/Poc.Contract/Poc.Contract.csproj .
+COPY src/poc.cqrs.api.twilio.net8/src/04-Infrastructure/DistributedCache/Poc.DistributedCache/Poc.DistributedCache.csproj .
+COPY src/poc.cqrs.api.twilio.net8/src/04-Infrastructure/Integration/Poc.Auth/Poc.Auth.csproj .
 
-# Restaura as dependências do projeto
+# Restaura as dependÃªncias do projeto
 RUN dotnet restore Poc.Twilio.API.csproj
 
-# Copia o restante dos arquivos do projeto para o contêiner
+# Copia o restante dos arquivos do projeto para o contÃªiner
 COPY . .
 
-# Define o diretório de trabalho e constrói o projeto
-WORKDIR /src/01-Presentation
-RUN dotnet build src/01-Presentation/Poc.Twilio.API/Poc.Twilio.API.csproj -c Release -o /app/build
+# Define o diretÃ³rio de trabalho e constrÃ³i o projeto
+WORKDIR /src/poc.cqrs.api.twilio.net8/src/01-Presentation
+RUN dotnet build src/poc.cqrs.api.twilio.net8/src/01-Presentation/Poc.Twilio.API/Poc.Twilio.API.csproj -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish src/01-Presentation/Poc.Twilio.API/Poc.Twilio.API.csproj -c Release -o /app/publish
+RUN dotnet publish src/poc.cqrs.api.twilio.net8/src/01-Presentation/Poc.Twilio.API/Poc.Twilio.API.csproj -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
