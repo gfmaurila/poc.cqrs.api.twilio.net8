@@ -2,13 +2,10 @@
 - ASP.NET Core 8.0: Framework para desenvolvimento da Microsoft.
 - AutoMapper: Biblioteca para realizar mapeamento entre objetos.
 - Swagger UI: Documentação para a API.
-- XUnit
 - FluentValidator
 - MongoDb
 - MediatR
 - Serilog
-- RabbitMQ
-- Kafka
 - Docker & Docker Compose
 
 # Arquitetura
@@ -17,10 +14,6 @@
 - Repository Pattern
 - Resut Pattern
 - Domain Events
-- ![image](https://github.com/gfmaurila/poc.cqrs.api.mock.net8/assets/5544035/5d4b23a7-eff4-4c38-87a3-9d88f1aa47e5)
-
-
-
 
 
 ## poc.cqrs.api.twilio.net
